@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +45,7 @@
         window.addEventListener("resize", resizeCanvas);
 
         // Game settings
-        const gridSize = 20; // Size of each square in the grid
+        const gridSize = 60; // Size of each square in the grid (3x original size)
         let snake = [{ x: gridSize * 5, y: gridSize * 5 }]; // Initial snake position (one segment)
         let direction = { x: 1, y: 0 }; // Initial direction (moving right)
         let fruit = { x: gridSize * 8, y: gridSize * 8 }; // Initial fruit position
