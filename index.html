@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,27 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <style>
-        canvas {
-            background: #333;
-            display: block;
-            margin: 0 auto;
-            border: 5px solid #fff;
-            border-radius: 10px;
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #333;
+            color: white;
+            font-family: Arial, sans-serif;
         }
         #scoreboard {
+            position: absolute;
+            top: 10px;
             text-align: center;
             font-size: 24px;
-            color: white;
-            margin-top: 10px;
+            width: 100%;
+        }
+        canvas {
+            border: 5px solid #fff;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
     <div id="scoreboard">Score: 0</div>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <canvas id="gameCanvas"></canvas>
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
+
+        // Set canvas to full screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
 
         // Game settings
         const gridSize = 20; // Size of each square in the grid
@@ -33,7 +51,6 @@
         let direction = { x: 1, y: 0 }; // Initial direction (moving right)
         let fruit = { x: gridSize * 8, y: gridSize * 8 }; // Initial fruit position
         let score = 0;
-        let gameOver = false;
 
         // Update scoreboard
         function updateScoreboard() {
@@ -79,8 +96,17 @@
             fruit.y = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
         }
 
-        // Check for game over
-        function checkGameOver() {
+        // Reset the game
+        function resetGame() {
+            score = 0;
+            updateScoreboard();
+            snake = [{ x: gridSize * 5, y: gridSize * 5 }];
+            direction = { x: 1, y: 0 };
+            placeFruit();
+        }
+
+        // Check for collisions
+        function checkCollisions() {
             const head = snake[0];
 
             // Check wall collisions
@@ -100,17 +126,15 @@
 
         // Update game
         function update() {
-            if (gameOver) {
-                alert("Game Over! Your score: " + score);
-                document.location.reload();
-                return;
-            }
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawSnake();
             drawFruit();
             moveSnake();
-            gameOver = checkGameOver();
+
+            // Check for collisions and reset if needed
+            if (checkCollisions()) {
+                resetGame();
+            }
         }
 
         // Handle swipe controls for mobile
@@ -124,8 +148,6 @@
         });
 
         canvas.addEventListener("touchmove", (e) => {
-            if (gameOver) return;
-
             const touch = e.touches[0];
             const deltaX = touch.clientX - touchStartX;
             const deltaY = touch.clientY - touchStartY;
