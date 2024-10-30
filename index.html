@@ -12,7 +12,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            background-color: #333;
+            background-color: black; /* Set the background color to black */
             font-family: Arial, sans-serif;
         }
         #scoreboard {
@@ -46,7 +46,7 @@
         window.addEventListener("resize", resizeCanvas);
 
         // Game settings
-        const gridSize = 40; // Twice the original size
+        const gridSize = 40; // Twice the original size for larger snake and fruit
         let snake = [{ x: gridSize * 5, y: gridSize * 5 }]; // Initial snake position (one segment)
         let direction = { x: 1, y: 0 }; // Initial direction (moving right)
         let fruit = { x: gridSize * 8, y: gridSize * 8 }; // Initial fruit position
@@ -173,8 +173,8 @@
             touchStartY = touch.clientY;
         });
 
-        // Game loop
-        setInterval(update, 100);
+        // Game loop (set interval to slow down the snake)
+        setInterval(update, 200); // Slow down the snake by increasing the interval to 200ms
 
     </script>
 </body>
