@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        canvas {
+            background: #333;
+            display: block;
+            margin: 0 auto;
+            border: 5px solid #fff;
+            border-radius: 10px;
+        }
+        #scoreboard {
+            text-align: center;
+            font-size: 24px;
+            color: white;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="scoreboard">Score: 0</div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Game settings
+        const gridSize = 20; // Size of each square in the grid
+        let snake = [{ x: gridSize * 5, y: gridSize * 5 }]; // Initial snake position (one segment)
+        let direction = { x: 1, y: 0 }; // Initial direction (moving right)
+        let fruit = { x: gridSize * 8, y: gridSize * 8 }; // Initial fruit position
+        let score = 0;
+        let gameOver = false;
+
+        // Update scoreboard
+        function updateScoreboard() {
+            document.getElementById("scoreboard").innerText = `Score: ${score}`;
+        }
+
+        // Draw snake
+        function drawSnake() {
+            ctx.fillStyle = "lime";
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x, segment.y, gridSize, gridSize);
+            });
+        }
+
+        // Draw fruit as a hollow red circle
+        function drawFruit() {
+            ctx.beginPath();
+            ctx.arc(fruit.x + gridSize / 2, fruit.y + gridSize / 2, gridSize / 2, 0, Math.PI * 2);
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        // Move the snake
+        function moveSnake() {
+            const head = { x: snake[0].x + direction.x * gridSize, y: snake[0].y + direction.y * gridSize };
+            snake.unshift(head); // Add new head to the snake
+
+            // Check if snake eats the fruit
+            if (head.x === fruit.x && head.y === fruit.y) {
+                score++;
+                updateScoreboard();
+                placeFruit(); // Move fruit to a new location
+            } else {
+                snake.pop(); // Remove the last segment if no fruit eaten
+            }
+        }
+
+        // Place fruit at a random position
+        function placeFruit() {
+            fruit.x = Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize;
+            fruit.y = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
+        }
+
+        // Check for game over
+        function checkGameOver() {
+            const head = snake[0];
+
+            // Check wall collisions
+            if (head.x < 0 || head.y < 0 || head.x >= canvas.width || head.y >= canvas.height) {
+                return true;
+            }
+
+            // Check self-collision
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Update game
+        function update() {
+            if (gameOver) {
+                alert("Game Over! Your score: " + score);
+                document.location.reload();
+                return;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSnake();
+            drawFruit();
+            moveSnake();
+            gameOver = checkGameOver();
+        }
+
+        // Handle swipe controls for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        canvas.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
+
+        canvas.addEventListener("touchmove", (e) => {
+            if (gameOver) return;
+
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe
+                if (deltaX > 0 && direction.x === 0) {
+                    direction = { x: 1, y: 0 }; // Right swipe
+                } else if (deltaX < 0 && direction.x === 0) {
+                    direction = { x: -1, y: 0 }; // Left swipe
+                }
+            } else {
+                // Vertical swipe
+                if (deltaY > 0 && direction.y === 0) {
+                    direction = { x: 0, y: 1 }; // Down swipe
+                } else if (deltaY < 0 && direction.y === 0) {
+                    direction = { x: 0, y: -1 }; // Up swipe
+                }
+            }
+
+            // Reset touch start coordinates
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
+
+        // Game loop
+        setInterval(update, 100);
+
+    </script>
+</body>
+</html>
