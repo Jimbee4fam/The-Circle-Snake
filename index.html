@@ -37,10 +37,10 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Set canvas to slightly smaller size
+        // Set canvas to slightly smaller size with shorter height
         function resizeCanvas() {
             canvas.width = window.innerWidth * 0.9; // Slightly smaller than full width
-            canvas.height = window.innerHeight * 0.9; // Slightly smaller than full height
+            canvas.height = window.innerHeight * 0.8; // Reduced height for a shorter play area
         }
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
