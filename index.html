@@ -12,7 +12,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            background-color: black; /* Set the overall background color to black */
+            background-color: black; /* Overall background color */
             font-family: Arial, sans-serif;
         }
         #scoreboard {
@@ -24,9 +24,9 @@
             color: white;
         }
         canvas {
-            border: 10px solid red; /* Thick red border */
+            border: 20px solid red; /* Larger red border */
             border-radius: 10px;
-            background-color: black; /* Set the canvas background color to black */
+            background-color: black; /* Canvas background color */
         }
     </style>
 </head>
@@ -37,17 +37,17 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Set canvas to full screen
+        // Set canvas to slightly smaller size
         function resizeCanvas() {
-            canvas.width = window.innerWidth - 20;
-            canvas.height = window.innerHeight - 20;
+            canvas.width = window.innerWidth * 0.9; // Slightly smaller than full width
+            canvas.height = window.innerHeight * 0.9; // Slightly smaller than full height
         }
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
 
         // Game settings
-        const gridSize = 40; // Twice the original size for larger snake and fruit
-        let snake = [{ x: gridSize * 5, y: gridSize * 5 }]; // Initial snake position (one segment)
+        const gridSize = 40; // Larger size for snake and fruit
+        let snake = [{ x: gridSize * 5, y: gridSize * 5 }]; // Initial snake position
         let direction = { x: 1, y: 0 }; // Initial direction (moving right)
         let fruit = { x: gridSize * 8, y: gridSize * 8 }; // Initial fruit position
         let score = 0;
@@ -173,8 +173,8 @@
             touchStartY = touch.clientY;
         });
 
-        // Game loop (set interval to slow down the snake even more)
-        setInterval(update, 300); // Further slow down the snake by increasing the interval to 300ms
+        // Game loop (interval at 200ms for moderate speed)
+        setInterval(update, 200);
 
     </script>
 </body>
