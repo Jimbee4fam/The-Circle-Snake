@@ -37,10 +37,10 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Set canvas to a smaller size
+        // Set canvas to a moderately smaller size
         function resizeCanvas() {
-            canvas.width = window.innerWidth * 0.7; // 70% of the window width
-            canvas.height = window.innerHeight * 0.6; // 60% of the window height
+            canvas.width = window.innerWidth * 0.8; // 80% of the window width
+            canvas.height = window.innerHeight * 0.7; // 70% of the window height
         }
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
@@ -170,8 +170,8 @@
             touchStartY = touch.clientY;
         });
 
-        // Game loop (interval at 133ms for faster speed)
-        setInterval(update, 133);
+        // Game loop (interval at 167ms for slightly faster speed)
+        setInterval(update, 167);
 
     </script>
 </body>
